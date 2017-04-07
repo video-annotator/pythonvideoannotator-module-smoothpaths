@@ -19,7 +19,7 @@ def savitzky_golay(y, window_size, order=0, deriv=0, rate=1):
 	try:
 		window_size = np.abs(np.int(window_size))
 		order = np.abs(np.int(order))
-	except ValueError, msg:
+	except ValueError as msg:
 		raise ValueError("window_size and order have to be of type int")
 	if window_size % 2 != 1 or window_size < 1:
 		raise TypeError("window_size size must be a positive odd number")
@@ -45,7 +45,10 @@ class SmoothPathsWindow(BaseWidget):
 		super(SmoothPathsWindow, self).__init__('Smooth paths', parent_win=parent)
 		self.mainwindow = parent
 
-		self.layout().setMargin(5)
+		if conf.PYFORMS_USE_QT5:
+			self.layout().setContentsMargins(5,5,5,5)
+		else:
+			self.layout().setMargin(5)
 		self.setMinimumHeight(400)
 		self.setMinimumWidth(800)
 
