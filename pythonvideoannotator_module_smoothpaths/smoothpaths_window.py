@@ -58,10 +58,10 @@ class SmoothPathsWindow(BaseWidget):
 		self._progress  	= ControlProgress('Progress')		
 		self._apply 		= ControlButton('Apply', checkable=True)
 
-		self._winsize   = ControlSlider('Window size', default=2,  minimum=2, maximum=100)
-		self._order  	= ControlSlider('Order', default=0,  minimum=0, maximum=10)
-		self._deriv   	= ControlSlider('Derivate', default=0,  minimum=0, maximum=10)
-		self._rate   	= ControlSlider('Rate', default=0,  minimum=0, maximum=10)
+		self._winsize   = ControlSlider('Window size', 2, 2, 100)
+		self._order  	= ControlSlider('Order', 0, 0, 10)
+		self._deriv   	= ControlSlider('Derivate', 0, 0, 10)
+		self._rate   	= ControlSlider('Rate', 0, 0, 10)
 
 			
 		self._formset = [
