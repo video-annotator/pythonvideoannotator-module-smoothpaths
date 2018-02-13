@@ -1,5 +1,5 @@
 import cv2
-from pysettings import conf
+from pyforms import conf
 from pythonvideoannotator_module_smoothpaths.smoothpaths_window import SmoothPathsWindow
 
 
