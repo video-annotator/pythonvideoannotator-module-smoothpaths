@@ -1,6 +1,6 @@
 import pyforms
-from pyforms import conf
-from pyforms import BaseWidget
+from confapp import conf
+from pyforms.basewidget import BaseWidget
 from pyforms.controls import ControlSlider
 from pyforms.controls import ControlButton
 from pyforms.controls import ControlEmptyWidget
@@ -12,7 +12,7 @@ from pythonvideoannotator_models_gui.models.video.objects.object2d.datasets.valu
 
 import numpy as np
 from pythonvideoannotator_models.utils.tools import savitzky_golay
-from pyforms import conf
+from confapp import conf
 
 
 
