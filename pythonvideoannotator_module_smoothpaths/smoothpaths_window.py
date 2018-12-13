@@ -32,13 +32,13 @@ class SmoothPathsWindow(BaseWidget):
 
 
 		self._datasets_panel= ControlEmptyWidget('Paths')
-		self._progress  	= ControlProgress('Progress')		
-		self._apply 		= ControlButton('Apply', checkable=True)
+		self._progress      = ControlProgress('Progress')       
+		self._apply         = ControlButton('Apply', checkable=True)
 
-		self._winsize   = ControlSlider('Window size', 2, 2, 100)
-		self._order  	= ControlSlider('Order', 0, 0, 10)
-		self._deriv   	= ControlSlider('Derivate', 0, 0, 10)
-		self._rate   	= ControlSlider('Rate', 0, 0, 10)
+		self._winsize   = ControlSlider('Window size', minimum=3, default=3, maximum=100)
+		self._order     = ControlSlider('Order', minimum=0, default=0, maximum=10)
+		self._deriv     = ControlSlider('Derivative', minimum=0, default=0, maximum=10)
+		self._rate      = ControlSlider('Rate', minimum=0, default=0, maximum=10)
 
 			
 		self._formset = [
@@ -55,12 +55,12 @@ class SmoothPathsWindow(BaseWidget):
 
 		self.load_order = ['_datasets_panel']
 
-		self.datasets_dialog 		= DatasetsDialog(self)
+		self.datasets_dialog        = DatasetsDialog(self)
 		self._datasets_panel.value = self.datasets_dialog
 		self.datasets_dialog.datasets_filter = lambda x: isinstance(x, (Path, Value))
 
-		self._apply.value		= self.__apply_event
-		self._apply.icon 		= conf.ANNOTATOR_ICON_PATH
+		self._apply.value       = self.__apply_event
+		self._apply.icon        = conf.ANNOTATOR_ICON_PATH
 
 		self._progress.hide()
 
@@ -85,9 +85,24 @@ class SmoothPathsWindow(BaseWidget):
 	def __apply_event(self):
 
 		if self._apply.checked:
+
+			if self._winsize.value<self._order.value+2:
+				self.message('The Window size has to be bigger than the Order + 2 ', 'Error', 'error')
+				self._apply.checked=False
+				return
+
+			if self._order.value<self._deriv.value:
+				self.message('The Derivative has to be less than or equal to the Order', 'Error', 'error')
+				self._apply.checked=False
+				return
+
+			if len(self.datasets_dialog.datasets)==0:
+				self.message('You have to select at least one dataset', 'Error', 'error')
+				self._apply.checked=False
+				return
 			
-			self._datasets_panel.enabled 	= False			
-			self._apply.label 			= 'Cancel'
+			self._datasets_panel.enabled    = False         
+			self._apply.label           = 'Cancel'
 
 			total_2_analyse  = 0
 			for video, (begin, end), datasets in self.datasets_dialog.selected_data:
@@ -99,8 +114,8 @@ class SmoothPathsWindow(BaseWidget):
 
 			count = 0
 			for video, (begin, end), datasets in self.datasets_dialog.selected_data:
-				begin 	= int(begin)
-				end 	= int(end)+1
+				begin   = int(begin)
+				end     = int(end)+1
 
 				for dataset in datasets:
 					if isinstance(dataset, Path):
@@ -147,7 +162,7 @@ class SmoothPathsWindow(BaseWidget):
 						for index in range(begin, end):
 							pos = dataset.get_position(index)
 							if pos is not None:
-								dataset.set_position(index, xs[index], ys[index])						
+								dataset.set_position(index, xs[index], ys[index])                       
 							self._progress.value = count
 							count += 1
 					elif isinstance(dataset, Value):
@@ -156,7 +171,7 @@ class SmoothPathsWindow(BaseWidget):
 						for index in range(begin, end):
 							val = dataset.get_value(index)
 							if val is not None:
-								dataset.set_value(index, xs[index])						
+								dataset.set_value(index, xs[index])                     
 							self._progress.value = count
 							count += 1
 					
@@ -165,9 +180,9 @@ class SmoothPathsWindow(BaseWidget):
 
 				
 
-			self._datasets_panel.enabled 	= True	
-			self._apply.label 			= 'Apply'
-			self._apply.checked 		= False
+			self._datasets_panel.enabled    = True  
+			self._apply.label           = 'Apply'
+			self._apply.checked         = False
 			self._progress.hide()
 
 
